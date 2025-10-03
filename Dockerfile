@@ -1,7 +1,12 @@
 FROM php:8.1-apache
 
-# Install SQLite3
-RUN apt-get update && apt-get install -y libsqlite3-dev \
+# Install dependencies for SQLite3
+RUN apt-get update && apt-get install -y \
+        libsqlite3-dev \
+        pkg-config \
+        libssl-dev \
+        unzip \
+        git \
     && docker-php-ext-install sqlite3 \
     && rm -rf /var/lib/apt/lists/*
 
@@ -13,7 +18,7 @@ COPY . /var/www/html/
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html/api \
-    && chmod 664 /var/www/html/panel/api/.db.db
+    && chmod 664 /var/www/html/api/.db.db
 
 EXPOSE 80
 CMD ["apache2-foreground"]
